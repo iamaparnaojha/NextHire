@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NextHire — Resume Analyzer</title>
+
+    <link rel="stylesheet" href="/css/variables.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/animations.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/layout.css">
+    <link rel="stylesheet" href="/css/pages.css">
+    <style>
+        .analyzer-layout {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: var(--sp-6);
+            height: calc(100vh - 120px);
+        }
+
+        .config-panel {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow-y: auto;
+            padding-right: var(--sp-2);
+        }
+
+        .result-panel {
+            background: var(--color-bg-tertiary);
+            border: 1px solid var(--color-glass-border);
+            border-radius: var(--radius-xl);
+            padding: var(--sp-6);
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .upload-zone {
+            border: 2px dashed var(--color-glass-border);
+            border-radius: var(--radius-lg);
+            padding: var(--sp-8) var(--sp-4);
+            text-align: center;
+            transition: all var(--duration-fast) ease;
+            cursor: pointer;
+            background: var(--color-bg-input);
+        }
+
+        .upload-zone.dragover {
+            border-color: var(--color-accent);
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .markdown-body h1,
+        .markdown-body h2,
+        .markdown-body h3 {
+            margin-top: var(--sp-6);
+            margin-bottom: var(--sp-3);
+            color: var(--color-text-heading);
+        }
+
+        .markdown-body p,
+        .markdown-body li {
+            margin-bottom: var(--sp-2);
+            line-height: var(--lh-relaxed);
+        }
+
+        .markdown-body ul,
+        .markdown-body ol {
+            padding-left: var(--sp-5);
+            margin-bottom: var(--sp-4);
+        }
+
+        .markdown-body strong {
+            color: var(--color-accent-light);
+        }
+
+        @media (max-width: 900px) {
+            .analyzer-layout {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <a href="/dashboard" class="nav-brand">
+                <span class="brand-icon">⚡</span> NextHire
+            </a>
+            <div class="nav-links">
+                <a href="/dashboard" class="nav-link">Dashboard</a>
+                <a href="/resume-analyzer" class="nav-link active">Analyzer</a>
+                <a href="/skill-gap" class="nav-link">Skill Gap</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="page">
+        <div class="container">
+            <div class="analyzer-layout">
+                <!-- Configuration Panel -->
+                <div class="config-panel">
+                    <h2 style="font-size: var(--fs-xl); margin-bottom: var(--sp-4);">Resume Analyzer</h2>
+
+                    <div class="card" style="margin-bottom: var(--sp-6); padding: var(--sp-4);">
+                        <div class="tabs" style="margin-bottom: var(--sp-4);">
+                            <button class="tab active" id="tab-upload">Upload File</button>
+                            <button class="tab" id="tab-paste">Paste Text</button>
+                        </div>
+
+                        <!-- Upload Mode -->
+                        <div id="upload-form">
+                            <div class="upload-zone" id="drop-zone">
+                                <div style="font-size: var(--fs-2xl); margin-bottom: var(--sp-2);">📄</div>
+                                <p style="font-weight: var(--fw-medium); margin-bottom: var(--sp-1);">Drag & drop your
+                                    resume </p>
+                                <!-- <p
+                                    style="font-size: var(--fs-xs); color: var(--color-text-muted); margin-bottom: var(--sp-4);">
+                                    PDF or DOCX (Max 5MB)</p> -->
+                                <button class="btn btn-secondary btn-sm" id="btn-select-file">Select File</button>
+                                <input type="file" id="resume-file" accept=".pdf,.docx" class="hidden">
+                            </div>
+
+                            <div id="file-info" class="hidden"
+                                style="background: var(--color-bg-input); padding: var(--sp-3); border-radius: var(--radius-md); display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--color-glass-border);">
+                                <span id="file-name"
+                                    style="font-size: var(--fs-sm); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;"></span>
+                                <button id="btn-remove-file" class="btn btn-ghost btn-sm"
+                                    style="color: var(--color-error);">✕</button>
+                            </div>
+                        </div>
+
+                        <!-- Paste Mode -->
+                        <div id="paste-form" class="hidden">
+                            <div class="form-group">
+                                <textarea id="resume-text" class="form-input"
+                                    placeholder="Paste your resume content here..."
+                                    style="min-height: 200px; font-size: var(--fs-sm);"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" style="margin-bottom: var(--sp-6); padding: var(--sp-4);">
+                        <label class="form-label" style="margin-bottom: var(--sp-2); display: block;">Target Job
+                            Description (Optional)</label>
+                        <p style="font-size: var(--fs-xs); color: var(--color-text-muted); margin-bottom: var(--sp-3);">
+                            Add a JD to get a tailored ATS score and specific matching feedback.
+                        </p>
+                        <textarea id="jd-text" class="form-input" placeholder="Paste the job description here..."
+                            style="min-height: 150px; font-size: var(--fs-sm);"></textarea>
+                    </div>
+
+                    <button id="btn-analyze" class="btn btn-primary btn-lg" style="width: 100%;">
+                        ✨ Analyze Resume
+                    </button>
+                </div>
+
+                <!-- Results Panel -->
+                <div class="result-panel">
+                    <div id="empty-state"
+                        style="height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--color-text-muted);">
+                        <div style="font-size: 4rem; margin-bottom: var(--sp-4); opacity: 0.5;">🔍</div>
+                        <h3>Ready to Analyze</h3>
+                        <p style="text-align: center; max-width: 300px;">Upload your resume and hit analyze to see AI
+                            feedback, ATS score, and optimization tips.</p>
+                    </div>
+
+                    <div id="loading-state" class="hidden"
+                        style="height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                        <div class="loader loader-lg" style="margin-bottom: var(--sp-4);"></div>
+                        <h3 class="animate-pulse">AI is reading your resume...</h3>
+                    </div>
+
+                    <div id="results-content" class="hidden">
+
+                        <!-- Score Banner -->
+                        <div id="score-container" class="hidden card"
+                            style="background: var(--gradient-button); border:none; margin-bottom: var(--sp-6); display: flex; align-items: center; justify-content: space-between; padding: var(--sp-4) var(--sp-6);">
+                            <div>
+                                <h3 style="color: white; margin-bottom: var(--sp-1);">ATS Match Score</h3>
+                                <p style="color: rgba(255,255,255,0.8); font-size: var(--fs-sm); margin:0;">Based on
+                                    provided Job Description</p>
+                            </div>
+                            <div
+                                style="background: rgba(0,0,0,0.2); padding: var(--sp-3) var(--sp-5); border-radius: var(--radius-lg);">
+                                <span id="ats-score-value"
+                                    style="font-size: var(--fs-3xl); font-weight: var(--fw-extrabold); color: white;">--</span>
+                                <span style="color: rgba(255,255,255,0.6); font-size: var(--fs-sm);">/100</span>
+                            </div>
+                        </div>
+
+                        <!-- Generated Content -->
+                        <div id="analysis-text" class="markdown-body"></div>
+
+                        <div id="typing-indicator" class="typing-indicator hidden" style="margin-top: var(--sp-4);">
+                            <span></span><span></span><span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/toast.js"></script>
+    <script src="/js/router.js"></script>
+    <script src="/js/upload.js"></script>
+    <script src="/js/streaming.js"></script>
+    <script src="/js/resume-analyzer.js"></script>
+</body>
+
+</html>

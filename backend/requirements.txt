@@ -1,0 +1,31 @@
+# Web Framework
+fastapi==0.115.12
+uvicorn[standard]==0.34.2
+
+# MongoDB
+motor==3.7.0
+pymongo[srv]==4.12.1
+
+# Authentication
+python-jose[cryptography]==3.4.0
+passlib[bcrypt]==1.7.4
+bcrypt==4.3.0
+
+# Environment
+python-dotenv==1.1.0
+
+# File Parsing
+PyMuPDF==1.25.5
+python-docx==1.1.2
+
+# Google Gemini AI
+google-genai==1.16.1
+
+# File Upload
+python-multipart==0.0.20
+
+# Validation
+email-validator==2.2.0
+
+# CORS & Utilities
+aiofiles==24.1.0

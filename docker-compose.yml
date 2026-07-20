@@ -1,0 +1,31 @@
+services:
+  nexthire-app:
+    build: .
+    container_name: nexthire-app
+    ports:
+      - "8000:8000"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8000
+      - UPLOAD_DIR=/app/uploads
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - GEMINI_MODEL=${GEMINI_MODEL:-gemini-2.5-flash}
+      - MONGODB_URI=mongodb://mongodb:27017/
+      - MONGODB_DB_NAME=nexthire
+      - JWT_SECRET=${JWT_SECRET:-super-secret-local-key}
+      - CORS_ORIGINS=*
+    depends_on:
+      - mongodb
+    volumes:
+      - ./uploads:/app/uploads
+
+  mongodb:
+    image: mongo:6.0
+    container_name: nexthire-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - nexthire_dbdata:/data/db
+
+volumes:
+  nexthire_dbdata:

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="NextHire Dashboard — Access all your AI placement preparation tools in one place.">
+    <title>NextHire — Dashboard</title>
+
+    <link rel="stylesheet" href="/css/variables.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/animations.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/layout.css">
+    <link rel="stylesheet" href="/css/pages.css">
+</head>
+<body>
+    <!-- ═══════════ Navigation ═══════════ -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <a href="/" class="nav-brand">
+                <span class="brand-icon">⚡</span>
+                NextHire
+            </a>
+
+            <div class="nav-links" id="nav-links">
+                <a href="/dashboard" class="nav-link active">Dashboard</a>
+                <a href="/resume-analyzer" class="nav-link">Resume Analyzer</a>
+                <a href="/interview" class="nav-link">AI Interview</a>
+            </div>
+
+            <div class="nav-actions">
+                <span id="user-name" style="font-size: var(--fs-sm); color: var(--color-text-secondary);"></span>
+                <button id="logout-btn" class="btn btn-ghost btn-sm">Logout</button>
+            </div>
+
+            <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ═══════════ Main Content ═══════════ -->
+    <main class="page">
+        <div class="container">
+            <!-- Welcome Card -->
+            <div class="welcome-card animate-fade-in-up" id="welcome-card">
+                <div>
+                    <h1 id="greeting">Welcome back! 👋</h1>
+                    <p style="color: var(--color-text-secondary); margin-top: var(--sp-2);">
+                        Your AI placement toolkit is ready. Pick a tool below to get started.
+                    </p>
+                </div>
+                <div style="position: relative; z-index:2;">
+                    <div class="badge badge-success" style="font-size: var(--fs-sm); padding: var(--sp-2) var(--sp-4);">
+                        ✨ All Tools Available
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature Cards Grid -->
+            <div class="dashboard-grid">
+                <!-- Resume Analyzer -->
+                <a href="/resume-analyzer" class="card dashboard-card animate-fade-in-up delay-1" id="card-resume">
+                    <div class="card-icon" style="background: rgba(59, 130, 246, 0.12); color: #60a5fa;">📄</div>
+                    <h3>Resume Analyzer</h3>
+                    <p>Upload your resume and a job description to get a comprehensive ATS analysis with scoring and optimization tips.</p>
+                    <span class="card-action">
+                        Start Analysis <span>→</span>
+                    </span>
+                </a>
+
+                <!-- Skill Gap -->
+                <a href="/skill-gap" class="card dashboard-card animate-fade-in-up delay-2" id="card-skill-gap">
+                    <div class="card-icon" style="background: rgba(16, 185, 129, 0.12); color: #34d399;">🎯</div>
+                    <h3>Skill Gap Analysis</h3>
+                    <p>Compare your skills against job requirements and get a personalized learning roadmap to close the gaps.</p>
+                    <span class="card-action">
+                        Analyze Skills <span>→</span>
+                    </span>
+                </a>
+
+                <!-- Cover Letter -->
+                <a href="/cover-letter" class="card dashboard-card animate-fade-in-up delay-3" id="card-cover-letter">
+                    <div class="card-icon" style="background: rgba(245, 158, 11, 0.12); color: #fbbf24;">✉️</div>
+                    <h3>Cover Letter Generator</h3>
+                    <p>Generate a tailored, professional cover letter that highlights your most relevant experience for the role.</p>
+                    <span class="card-action">
+                        Generate Letter <span>→</span>
+                    </span>
+                </a>
+
+                <!-- AI Interview -->
+                <a href="/interview" class="card dashboard-card animate-fade-in-up delay-4" id="card-interview">
+                    <div class="card-icon" style="background: rgba(139, 92, 246, 0.12); color: #a78bfa;">🤖</div>
+                    <h3>AI Interview with Aru</h3>
+                    <p>Practice interviews with our AI interviewer "Aru". Choose HR, Technical, Behavioral, or Managerial rounds.</p>
+                    <span class="card-action">
+                        Start Interview <span>→</span>
+                    </span>
+                </a>
+
+                <!-- Impactful Introduction -->
+                <a href="/introduction" class="card dashboard-card animate-fade-in-up delay-5" id="card-intro">
+                    <div class="card-icon" style="background: rgba(236, 72, 153, 0.12); color: #f472b6;">✨</div>
+                    <h3>Impactful bio</h3>
+                    <p>Upload your resume to instantly generate a powerful, professional biography/elevator pitch for yourself.</p>
+                    <span class="card-action">
+                        Generate Intro <span>→</span>
+                    </span>
+                </a>
+
+                <!-- History -->
+                <a href="/history" class="card dashboard-card animate-fade-in-up delay-6" id="card-history">
+                    <div class="card-icon" style="background: rgba(148, 163, 184, 0.12); color: #94a3b8;">📚</div>
+                    <h3>History</h3>
+                    <p>Access your past AI analyses, interviews, skill gaps, and cover letters.</p>
+                    <span class="card-action">
+                        View History <span>→</span>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/toast.js"></script>
+    <script src="/js/router.js"></script>
+    <script>
+        // ── Auth Guard ──
+        requireAuth();
+
+        // ── Set Username ──
+        const user = JSON.parse(localStorage.getItem('nexthire_user') || '{}');
+        const nameEl = document.getElementById('user-name');
+        const greetingEl = document.getElementById('greeting');
+
+        if (user.name) {
+            nameEl.textContent = `Hi, ${user.name.split(' ')[0]}`;
+            const hour = new Date().getHours();
+            let greeting = 'Good evening';
+            if (hour < 12) greeting = 'Good morning';
+            else if (hour < 17) greeting = 'Good afternoon';
+            greetingEl.textContent = `${greeting}, ${user.name.split(' ')[0]}! 👋`;
+        }
+
+        // ── Logout ──
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            localStorage.removeItem('nexthire_token');
+            localStorage.removeItem('nexthire_user');
+            window.location.href = '/';
+        });
+
+        // ── Navbar Scroll ──
+        window.addEventListener('scroll', () => {
+            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // ── Mobile Menu ──
+        document.getElementById('nav-toggle').addEventListener('click', function() {
+            this.classList.toggle('active');
+            document.getElementById('nav-links').classList.toggle('open');
+        });
+    </script>
+</body>
+</html>

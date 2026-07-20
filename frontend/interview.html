@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NextHire — Aru AI Simulator</title>
+    
+    <link rel="stylesheet" href="/css/variables.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/animations.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/layout.css">
+    <link rel="stylesheet" href="/css/pages.css">
+    
+    <style>
+        .simulator-layout {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: var(--sp-6);
+            height: calc(100vh - 120px);
+        }
+        .config-panel {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow-y: auto;
+            padding-right: var(--sp-2);
+        }
+        .chat-panel {
+            background: var(--color-bg-tertiary);
+            border: 1px solid var(--color-glass-border);
+            border-radius: var(--radius-xl);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .chat-header {
+            padding: var(--sp-4) var(--sp-6);
+            border-bottom: 1px solid var(--color-glass-border);
+            display: flex;
+            align-items: center;
+            gap: var(--sp-4);
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(10px);
+        }
+        .aru-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--gradient-button);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--fs-xl);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: var(--sp-6);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: var(--sp-4);
+        }
+        
+        .message {
+            max-width: 80%;
+            padding: var(--sp-3) var(--sp-5);
+            border-radius: var(--radius-lg);
+            line-height: var(--lh-relaxed);
+            animation: fadeIn 0.3s ease-out;
+        }
+        .message.aru {
+            align-self: flex-start;
+            background: var(--color-bg-input);
+            border: 1px solid var(--color-glass-border);
+            border-bottom-left-radius: 0;
+        }
+        .message.user {
+            align-self: flex-end;
+            background: var(--gradient-button);
+            color: white;
+            border-bottom-right-radius: 0;
+        }
+        
+        .chat-input-area {
+            padding: var(--sp-4) var(--sp-6);
+            border-top: 1px solid var(--color-glass-border);
+            background: rgba(255, 255, 255, 0.02);
+            display: flex;
+            gap: var(--sp-3);
+        }
+        .chat-input {
+            flex: 1;
+            background: var(--color-bg-input);
+            border: 1px solid var(--color-glass-border);
+            border-radius: var(--radius-lg);
+            padding: var(--sp-3) var(--sp-4);
+            color: var(--color-text);
+            resize: none;
+            outline: none;
+            font-family: inherit;
+        }
+        .chat-input:focus {
+            border-color: var(--color-accent);
+        }
+        
+        .upload-zone {
+            border: 2px dashed var(--color-glass-border);
+            border-radius: var(--radius-lg);
+            padding: var(--sp-6) var(--sp-4);
+            text-align: center;
+            cursor: pointer;
+            background: var(--color-bg-input);
+            transition: all var(--duration-fast);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 900px) {
+            .simulator-layout {
+                grid-template-columns: 1fr;
+                height: calc(100vh - 100px);
+            }
+            .chat-panel {
+                height: 500px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <a href="/dashboard" class="nav-brand">
+                <span class="brand-icon">⚡</span> NextHire
+            </a>
+            <div class="nav-links">
+                <a href="/dashboard" class="nav-link">Dashboard</a>
+                <a href="/resume-analyzer" class="nav-link">Analyzer</a>
+                <a href="/interview" class="nav-link active">Aru Simulator</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="page">
+        <div class="container">
+            <div class="simulator-layout">
+                <!-- Config Panel -->
+                <div class="config-panel">
+                    <h2 style="font-size: var(--fs-xl); margin-bottom: var(--sp-2);">Interview Setup</h2>
+                    <p style="font-size: var(--fs-sm); color: var(--color-text-muted); margin-bottom: var(--sp-6);">Provide context so Aru can tailor the interview.</p>
+                    
+                    <div class="card" style="margin-bottom: var(--sp-4); padding: var(--sp-4);">
+                        <label class="form-label" style="display: block; margin-bottom: var(--sp-2);">Target Job Description (Required)</label>
+                        <textarea id="jd-text" class="form-input" placeholder="Paste the JD here..." style="min-height: 120px; font-size: var(--fs-sm);"></textarea>
+                    </div>
+
+                    <div class="card" style="margin-bottom: var(--sp-6); padding: var(--sp-4);">
+                        <label class="form-label" style="display: block; margin-bottom: var(--sp-2);">Your Resume</label>
+                        <div id="upload-form">
+                            <div class="upload-zone" id="drop-zone">
+                                📄 <br>
+                                <span style="font-size: var(--fs-sm);">Upload PDF/DOCX</span>
+                                <input type="file" id="resume-file" accept=".pdf,.docx" class="hidden">
+                                <button class="btn btn-secondary btn-sm" id="btn-select-file" style="margin-top:var(--sp-2);">Select File</button>
+                            </div>
+                            
+                            <div id="file-info" class="hidden" style="margin-top:var(--sp-2); background: var(--color-bg-input); padding: var(--sp-2); border-radius: var(--radius-md); display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--color-glass-border);">
+                                <span id="file-name" style="font-size: var(--fs-xs); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;"></span>
+                                <button id="btn-remove-file" class="btn btn-ghost btn-sm" style="color: var(--color-error); padding: 0;">✕</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button id="btn-start-interview" class="btn btn-primary btn-lg" style="width: 100%;">
+                        Start Interview 🚀
+                    </button>
+                    
+                    <!-- Hidden input to store extracted resume text -->
+                    <input type="hidden" id="resume-text-hidden">
+                </div>
+                
+                <!-- Chat Panel -->
+                <div class="chat-panel" id="chat-panel">
+                    <div class="chat-header" style="justify-content: space-between;">
+                        <div style="display: flex; align-items: center; gap: var(--sp-4);">
+                            <div class="aru-avatar">🤖</div>
+                            <div>
+                                <h3 style="margin: 0; font-size: var(--fs-lg);">Aru</h3>
+                                <p style="margin: 0; font-size: var(--fs-xs); color: var(--color-text-muted);">AI Interviewer</p>
+                            </div>
+                        </div>
+                        <button id="btn-end-interview" class="btn btn-secondary btn-sm hidden">
+                            End & Get Report
+                        </button>
+                    </div>
+                    
+                    <div class="chat-messages" id="chat-messages">
+                        <div class="message aru" id="welcome-msg">
+                            Hello! I'm Aru, your AI interviewer. Please provide your Job Description and Resume on the left, then click <strong>Start Interview</strong> to begin.
+                        </div>
+                    </div>
+                    
+                    <div class="chat-input-area hidden" id="chat-input-area">
+                        <textarea id="chat-input" class="chat-input" rows="2" placeholder="Type your answer..." disabled></textarea>
+                        <button id="btn-send" class="btn btn-primary" style="height: auto; align-self: stretch; padding: 0 var(--sp-5);" disabled>Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <div class="toast-container" id="toast-container"></div>
+    
+    <!-- Report Modal -->
+    <div id="report-modal" class="modal hidden" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 100; display: flex; align-items: center; justify-content: center;">
+        <div class="modal-content card" style="width: 90%; max-width: 800px; max-height: 90vh; display: flex; flex-direction: column;">
+            <div style="padding: var(--sp-4) var(--sp-6); border-bottom: 1px solid var(--color-glass-border); display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0;">Interview Hiring Report</h3>
+                <button id="btn-close-modal" class="btn btn-ghost" style="padding: var(--sp-2);">✕</button>
+            </div>
+            <div id="report-content" class="markdown-body" style="padding: var(--sp-6); overflow-y: auto; flex: 1;">
+            </div>
+            <div id="report-loading" class="hidden" style="padding: var(--sp-8); text-align: center;">
+                <div class="loader loader-lg" style="margin: 0 auto var(--sp-4);"></div>
+                <p>Generating your comprehensive hiring report...</p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/toast.js"></script>
+    <script src="/js/router.js"></script>
+    <script src="/js/upload.js"></script>
+    <script src="/js/streaming.js"></script>
+    <script src="/js/interview.js"></script>
+</body>
+</html>

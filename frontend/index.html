@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="NextHire — Your AI Placement Coach. Get resume analysis, ATS scoring, skill gap assessment, cover letter generation, and AI-powered interview practice.">
+    <title>NextHire — Your AI Placement Coach</title>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/css/variables.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/animations.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/layout.css">
+    <link rel="stylesheet" href="/css/pages.css">
+</head>
+<body>
+    <!-- ═══════════ Navigation ═══════════ -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <a href="/" class="nav-brand" id="nav-brand">
+                <span class="brand-icon">⚡</span>
+                NextHire
+            </a>
+
+            <div class="nav-links" id="nav-links">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#how-it-works" class="nav-link">How It Works</a>
+                <a href="#about" class="nav-link">About</a>
+            </div>
+
+            <div class="nav-actions">
+                <!-- Shown when NOT logged in -->
+                <div id="nav-guest">
+                    <a href="/login" class="btn btn-secondary btn-sm">Sign In</a>
+                    <a href="/login?mode=register" class="btn btn-primary btn-sm">Get Started</a>
+                </div>
+                <!-- Shown when logged in -->
+                <div id="nav-user" class="hidden" style="display:flex; align-items:center; gap:var(--sp-3);">
+                    <a href="/dashboard" class="btn btn-primary btn-sm">Dashboard</a>
+                    <button id="nav-logout" class="btn btn-ghost btn-sm">Logout</button>
+                </div>
+            </div>
+
+            <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ═══════════ Hero Section ═══════════ -->
+    <section class="hero page" id="hero">
+        <div class="hero-grid"></div>
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge animate-fade-in-up">
+                    <span class="dot"></span>
+                    AI-Powered Career Platform
+                </div>
+
+                <h1 class="animate-fade-in-up delay-1">
+                    Your AI
+                    <span class="gradient-text">Placement Coach</span>
+                    Awaits
+                </h1>
+
+                <p class="hero-subtitle animate-fade-in-up delay-2">
+                    Upload your resume, paste a job description, and let our AI analyze your fit,
+                    optimize your application, and prepare you for interviews — all in one place.
+                </p>
+
+                <div class="hero-actions animate-fade-in-up delay-3">
+                    <a href="/login?mode=register" class="btn btn-primary btn-lg" id="hero-cta">
+                        🚀 Start Free Analysis
+                    </a>
+                    <a href="#features" class="btn btn-secondary btn-lg">
+                        Explore Features
+                    </a>
+                </div>
+
+                <div class="hero-stats animate-fade-in-up delay-4">
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">6+</div>
+                        <div class="hero-stat-label">AI Tools</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">ATS</div>
+                        <div class="hero-stat-label">Score Analysis</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">Aru 🤖</div>
+                        <div class="hero-stat-label">AI Interviewer</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">SSE</div>
+                        <div class="hero-stat-label">Real-time Streaming</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ Features Section ═══════════ -->
+    <section class="section" id="features">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-label">Features</span>
+                <h2>Everything You Need to <span class="gradient-text">Land Your Dream Job</span></h2>
+                <p>From resume optimization to live AI interviews — NextHire covers every step of your placement journey.</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="card feature-card reveal">
+                    <div class="card-icon">📄</div>
+                    <h3>Resume Analyzer</h3>
+                    <p>Get a comprehensive AI analysis of your resume with actionable feedback, formatting tips, and content optimization suggestions.</p>
+                </div>
+
+                <div class="card feature-card reveal delay-1">
+                    <div class="card-icon">📊</div>
+                    <h3>ATS Score</h3>
+                    <p>See exactly how your resume scores against Applicant Tracking Systems. Get a 0-100 score with keyword match analysis.</p>
+                </div>
+
+                <div class="card feature-card reveal delay-2">
+                    <div class="card-icon">🎯</div>
+                    <h3>Skill Gap Analysis</h3>
+                    <p>Compare your skills against job requirements. Get a personalized learning roadmap to bridge the gaps.</p>
+                </div>
+
+                <div class="card feature-card reveal delay-3">
+                    <div class="card-icon">✉️</div>
+                    <h3>Cover Letter Generator</h3>
+                    <p>Generate tailored, professional cover letters that highlight your relevant experience for each specific role.</p>
+                </div>
+
+                <div class="card feature-card reveal delay-4">
+                    <div class="card-icon">🤖</div>
+                    <h3>AI Interview with Aru</h3>
+                    <p>Practice with our AI interviewer "Aru". Get real-time feedback, scores, and tips after every answer.</p>
+                </div>
+
+                <div class="card feature-card reveal delay-5">
+                    <div class="card-icon">📋</div>
+                    <h3>Hiring Report</h3>
+                    <p>Receive a detailed hiring readiness report with scores across all dimensions and actionable improvement areas.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ How It Works ═══════════ -->
+    <section class="section" id="how-it-works" style="background: var(--color-bg-secondary);">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-label">How It Works</span>
+                <h2>Get Placement-Ready in <span class="gradient-text">4 Simple Steps</span></h2>
+                <p>NextHire streamlines your entire preparation process with AI intelligence.</p>
+            </div>
+
+            <div class="steps-grid">
+                <div class="step-card card reveal">
+                    <div class="step-number">1</div>
+                    <h4>Upload Resume</h4>
+                    <p>Upload your PDF or DOCX resume, or paste the text directly.</p>
+                </div>
+
+                <div class="step-card card reveal delay-1">
+                    <div class="step-number">2</div>
+                    <h4>Add Job Description</h4>
+                    <p>Paste the job posting you're targeting for personalized analysis.</p>
+                </div>
+
+                <div class="step-card card reveal delay-2">
+                    <div class="step-number">3</div>
+                    <h4>Get AI Analysis</h4>
+                    <p>Receive instant ATS scores, skill gaps, and optimization tips.</p>
+                </div>
+
+                <div class="step-card card reveal delay-3">
+                    <div class="step-number">4</div>
+                    <h4>Practice Interview</h4>
+                    <p>Chat with Aru, our AI interviewer, and get your hiring report.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ About ═══════════ -->
+    <section class="section" id="about">
+        <div class="container">
+            <div class="cta-section reveal">
+                <h2>Ready to <span class="gradient-text">Ace Your Next Interview</span>?</h2>
+                <p>Join NextHire and let AI give you the edge you need to land your dream placement.</p>
+                <a href="/login?mode=register" class="btn btn-primary btn-lg" style="position:relative; z-index:2;">
+                    🎯 Get Started — It's Free
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ Footer ═══════════ -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3 class="gradient-text">NextHire</h3>
+                    <p>Your AI-powered placement coach. Resume analysis, interview prep, and career optimization — all in one platform.</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-col">
+                        <h4>Product</h4>
+                        <a href="#features">Features</a>
+                        <a href="#how-it-works">How It Works</a>
+                        <a href="/login?mode=register">Get Started</a>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Platform</h4>
+                        <a href="/resume-analyzer">Resume Analyzer</a>
+                        <a href="/interview">AI Interview</a>
+                        <a href="/dashboard">Dashboard</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 NextHire. Built with ⚡ by AI.</p>
+                <p>Powered by Google Gemini</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ═══════════ Scripts ═══════════ -->
+    <script src="/js/api.js"></script>
+    <script src="/js/toast.js"></script>
+    <script src="/js/router.js"></script>
+    <script>
+        // ── Navbar Scroll Effect ──
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // ── Mobile Nav Toggle ──
+        const toggle = document.getElementById('nav-toggle');
+        const navLinks = document.getElementById('nav-links');
+        toggle.addEventListener('click', () => {
+            toggle.classList.toggle('active');
+            navLinks.classList.toggle('open');
+        });
+
+        // ── Close mobile nav on link click ──
+        navLinks.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                toggle.classList.remove('active');
+                navLinks.classList.remove('open');
+            });
+        });
+
+        // ── Scroll Reveal ──
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        // ── Auth State in Nav ──
+        const token = localStorage.getItem('nexthire_token');
+        if (token) {
+            document.getElementById('nav-guest').classList.add('hidden');
+            document.getElementById('nav-user').classList.remove('hidden');
+            document.getElementById('nav-user').style.display = 'flex';
+        } else {
+            document.getElementById('nav-guest').classList.remove('hidden');
+            document.getElementById('nav-user').classList.add('hidden');
+            document.getElementById('nav-user').style.display = 'none';
+        }
+
+        // ── Logout ──
+        const logoutBtn = document.getElementById('nav-logout');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', () => {
+                localStorage.removeItem('nexthire_token');
+                localStorage.removeItem('nexthire_user');
+                window.location.href = '/';
+            });
+        }
+
+        // ── Smooth scroll for anchor links ──
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(anchor.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>

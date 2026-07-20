@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NextHire — AI Cover Letter</title>
+    
+    <link rel="stylesheet" href="/css/variables.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/animations.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/layout.css">
+    <link rel="stylesheet" href="/css/pages.css">
+    <!-- Reusing analyzer layout styles -->
+    <style>
+        .analyzer-layout {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: var(--sp-6);
+            height: calc(100vh - 120px);
+        }
+        .config-panel {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow-y: auto;
+            padding-right: var(--sp-2);
+        }
+        .result-panel {
+            background: var(--color-bg-tertiary);
+            border: 1px solid var(--color-glass-border);
+            border-radius: var(--radius-xl);
+            padding: var(--sp-6);
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .upload-zone {
+            border: 2px dashed var(--color-glass-border);
+            border-radius: var(--radius-lg);
+            padding: var(--sp-8) var(--sp-4);
+            text-align: center;
+            transition: all var(--duration-fast) ease;
+            cursor: pointer;
+            background: var(--color-bg-input);
+        }
+        .upload-zone.dragover {
+            border-color: var(--color-accent);
+            background: rgba(99, 102, 241, 0.05);
+        }
+        
+        .markdown-body h1, .markdown-body h2, .markdown-body h3 {
+            margin-top: var(--sp-6);
+            margin-bottom: var(--sp-3);
+            color: var(--color-text-heading);
+        }
+        .markdown-body p, .markdown-body li {
+            margin-bottom: var(--sp-2);
+            line-height: var(--lh-relaxed);
+        }
+        .markdown-body ul, .markdown-body ol {
+            padding-left: var(--sp-5);
+            margin-bottom: var(--sp-4);
+        }
+        .markdown-body strong {
+            color: var(--color-accent-light);
+        }
+        
+        /* Specific to cover letter */
+        .copy-btn {
+            position: absolute;
+            top: var(--sp-4);
+            right: var(--sp-4);
+            background: var(--color-surface);
+            border: 1px solid var(--color-glass-border);
+            color: var(--color-text);
+            padding: var(--sp-2) var(--sp-4);
+            border-radius: var(--radius-md);
+            font-size: var(--fs-xs);
+            font-weight: var(--fw-bold);
+            cursor: pointer;
+            z-index: 10;
+        }
+        .copy-btn:hover {
+            background: var(--color-accent);
+        }
+
+        @media (max-width: 900px) {
+            .analyzer-layout {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <a href="/dashboard" class="nav-brand">
+                <span class="brand-icon">⚡</span> NextHire
+            </a>
+            <div class="nav-links">
+                <a href="/dashboard" class="nav-link">Dashboard</a>
+                <a href="/resume-analyzer" class="nav-link">Analyzer</a>
+                <a href="/skill-gap" class="nav-link">Skill Gap</a>
+                <a href="/cover-letter" class="nav-link active">Cover Letter</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="page">
+        <div class="container">
+            <div class="analyzer-layout">
+                <!-- Configuration Panel -->
+                <div class="config-panel">
+                    <h2 style="font-size: var(--fs-xl); margin-bottom: var(--sp-4);">AI Cover Letter</h2>
+                    
+                    <div class="card" style="margin-bottom: var(--sp-6); padding: var(--sp-4);">
+                        <label class="form-label" style="margin-bottom: var(--sp-2); display: block;">Job Description (Required)</label>
+                        <p style="font-size: var(--fs-xs); color: var(--color-text-muted); margin-bottom: var(--sp-3);">
+                            Paste the JD to get a perfectly tailored cover letter.
+                        </p>
+                        <textarea id="jd-text" class="form-input" placeholder="Paste the job description here..." style="min-height: 150px; font-size: var(--fs-sm);"></textarea>
+                    </div>
+
+                    <div class="card" style="margin-bottom: var(--sp-6); padding: var(--sp-4);">
+                        <div class="tabs" style="margin-bottom: var(--sp-4);">
+                            <button class="tab active" id="tab-upload">Upload Resume</button>
+                            <button class="tab" id="tab-paste">Paste Resume</button>
+                        </div>
+                        
+                        <div id="upload-form">
+                            <div class="upload-zone" id="drop-zone">
+                                <div style="font-size: var(--fs-2xl); margin-bottom: var(--sp-2);">📄</div>
+                                <button class="btn btn-secondary btn-sm" id="btn-select-file">Select File</button>
+                                <input type="file" id="resume-file" accept=".pdf,.docx" class="hidden">
+                            </div>
+                            
+                            <div id="file-info" class="hidden" style="background: var(--color-bg-input); padding: var(--sp-3); border-radius: var(--radius-md); display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--color-glass-border);">
+                                <span id="file-name" style="font-size: var(--fs-sm); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;"></span>
+                                <button id="btn-remove-file" class="btn btn-ghost btn-sm" style="color: var(--color-error);">✕</button>
+                            </div>
+                        </div>
+                        
+                        <div id="paste-form" class="hidden">
+                            <div class="form-group">
+                                <textarea id="resume-text" class="form-input" placeholder="Paste your resume content here..." style="min-height: 150px; font-size: var(--fs-sm);"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button id="btn-analyze" class="btn btn-primary btn-lg" style="width: 100%;">
+                        ✍️ Generate Cover Letter
+                    </button>
+                </div>
+                
+                <!-- Results Panel -->
+                <div class="result-panel">
+                    <button id="btn-copy" class="copy-btn hidden">Copy Text</button>
+
+                    <div id="empty-state" style="height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--color-text-muted);">
+                        <div style="font-size: 4rem; margin-bottom: var(--sp-4); opacity: 0.5;">✉️</div>
+                        <h3>Stand Out</h3>
+                        <p style="text-align: center; max-width: 300px;">Generate a tailored, high-converting cover letter based on your resume and the JD.</p>
+                    </div>
+                    
+                    <div id="loading-state" class="hidden" style="height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                        <div class="loader loader-lg" style="margin-bottom: var(--sp-4);"></div>
+                        <h3 class="animate-pulse">Writing your cover letter...</h3>
+                    </div>
+                    
+                    <div id="results-content" class="hidden">
+                        <!-- Generated Content -->
+                        <div id="analysis-text" class="markdown-body"></div>
+                        
+                        <div id="typing-indicator" class="typing-indicator hidden" style="margin-top: var(--sp-4);">
+                            <span></span><span></span><span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <div class="toast-container" id="toast-container"></div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Raw text extractor to cleanly copy markdown as raw text -->
+    <script>
+        function cleanupHTML(html) {
+            const temp = document.createElement('div');
+            temp.innerHTML = html;
+            return temp.textContent || temp.innerText || "";
+        }
+    </script>
+    <script src="/js/api.js"></script>
+    <script src="/js/toast.js"></script>
+    <script src="/js/router.js"></script>
+    <script src="/js/upload.js"></script>
+    <script src="/js/streaming.js"></script>
+    <script src="/js/cover-letter.js"></script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NextHire — History</title>
+    
+    <link rel="stylesheet" href="/css/variables.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/animations.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/layout.css">
+    <link rel="stylesheet" href="/css/pages.css">
+    
+    <style>
+        .history-layout {
+            padding: var(--sp-6) 0;
+        }
+        
+        .history-empty {
+            text-align: center;
+            padding: var(--sp-12);
+            color: var(--color-text-muted);
+        }
+        
+        .history-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--sp-6);
+            margin-top: var(--sp-6);
+        }
+        
+        .history-card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-glass-border);
+            border-radius: var(--radius-lg);
+            padding: var(--sp-5);
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            transition: all var(--duration-fast);
+        }
+        .history-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--color-accent);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .history-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--sp-3);
+        }
+        
+        .history-tool-badge {
+            font-size: var(--fs-xs);
+            padding: 2px 8px;
+            border-radius: 12px;
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--color-accent-light);
+            font-weight: var(--fw-bold);
+            text-transform: uppercase;
+        }
+        
+        .history-date {
+            font-size: var(--fs-xs);
+            color: var(--color-text-muted);
+        }
+        
+        .history-content-preview {
+            font-size: var(--fs-sm);
+            color: var(--color-text-secondary);
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: var(--sp-4);
+            flex: 1;
+        }
+        
+        /* Modal */
+        #history-modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #history-modal.hidden {
+            display: none;
+        }
+        .modal-content {
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <a href="/dashboard" class="nav-brand">
+                <span class="brand-icon">⚡</span> NextHire
+            </a>
+            <div class="nav-links">
+                <a href="/dashboard" class="nav-link">Dashboard</a>
+                <a href="/history" class="nav-link active">History</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="page">
+        <div class="container history-layout">
+            <h1 style="margin-bottom: var(--sp-2);">Your History</h1>
+            <p style="color: var(--color-text-muted);">Access your previously saved AI analysis, interview reports, and cover letters.</p>
+            
+            <div id="loading-state" style="text-align: center; padding: var(--sp-12);">
+                <div class="loader loader-lg" style="margin: 0 auto var(--sp-4);"></div>
+                <p>Loading your history...</p>
+            </div>
+            
+            <div id="empty-state" class="history-empty hidden">
+                <div style="font-size: 4rem; opacity: 0.5; margin-bottom: var(--sp-4);">📭</div>
+                <h3>No history found</h3>
+                <p>Once you use our AI tools, your results will be automatically saved here.</p>
+            </div>
+            
+            <div id="history-grid" class="history-grid hidden">
+                <!-- Cards injected here via JS -->
+            </div>
+        </div>
+    </main>
+
+    <!-- History Detail Modal -->
+    <div id="history-modal" class="hidden">
+        <div class="modal-content card">
+            <div style="padding: var(--sp-4) var(--sp-6); border-bottom: 1px solid var(--color-glass-border); display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h3 id="modal-title" style="margin: 0;">History Detail</h3>
+                    <p id="modal-date" style="font-size: var(--fs-xs); color: var(--color-text-muted); margin: 0;"></p>
+                </div>
+                <button id="btn-close-modal" class="btn btn-ghost" style="padding: var(--sp-2);">✕</button>
+            </div>
+            <div id="modal-body" class="markdown-body" style="padding: var(--sp-6); overflow-y: auto; flex: 1;">
+            </div>
+        </div>
+    </div>
+    
+    <div class="toast-container" id="toast-container"></div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/toast.js"></script>
+    <script src="/js/router.js"></script>
+    <script src="/js/history.js"></script>
+</body>
+</html>

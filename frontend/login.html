@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sign in or create your NextHire account to start your AI-powered placement preparation.">
+    <title>NextHire — Sign In</title>
+
+    <link rel="stylesheet" href="/css/variables.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/animations.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/layout.css">
+    <link rel="stylesheet" href="/css/pages.css">
+</head>
+<body>
+    <div class="auth-page">
+        <div class="auth-container animate-fade-in-scale">
+            <!-- Header -->
+            <div class="auth-header">
+                <a href="/" class="nav-brand">
+                    <span class="brand-icon">⚡</span>
+                    NextHire
+                </a>
+                <h1 id="auth-title">Welcome Back</h1>
+                <p id="auth-subtitle">Sign in to continue your preparation</p>
+            </div>
+
+            <!-- Auth Card -->
+            <div class="card auth-card">
+                <!-- Tabs -->
+                <div class="tabs" style="margin-bottom: var(--sp-6);">
+                    <button class="tab active" id="tab-login" data-tab="login">Sign In</button>
+                    <button class="tab" id="tab-register" data-tab="register">Create Account</button>
+                </div>
+
+                <!-- Login Form -->
+                <form id="login-form" class="auth-form">
+                    <div class="form-group">
+                        <label class="form-label" for="login-email">Email Address</label>
+                        <input type="email" id="login-email" class="form-input" placeholder="you@example.com" required autocomplete="email">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="login-password">Password</label>
+                        <div class="password-toggle">
+                            <input type="password" id="login-password" class="form-input" placeholder="Enter your password" required autocomplete="current-password" minlength="6">
+                            <button type="button" onclick="togglePassword('login-password', this)" aria-label="Toggle password visibility">👁️</button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="login-submit">
+                        Sign In
+                    </button>
+                </form>
+
+                <!-- Register Form (hidden by default) -->
+                <form id="register-form" class="auth-form hidden">
+                    <div class="form-group">
+                        <label class="form-label" for="register-name">Full Name</label>
+                        <input type="text" id="register-name" class="form-input" placeholder="John Doe" required minlength="2" autocomplete="name">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="register-email">Email Address</label>
+                        <input type="email" id="register-email" class="form-input" placeholder="you@example.com" required autocomplete="email">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="register-password">Password</label>
+                        <div class="password-toggle">
+                            <input type="password" id="register-password" class="form-input" placeholder="Min 6 characters" required minlength="6" autocomplete="new-password">
+                            <button type="button" onclick="togglePassword('register-password', this)" aria-label="Toggle password visibility">👁️</button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="register-submit">
+                        Create Account
+                    </button>
+                </form>
+            </div>
+
+            <!-- Toggle -->
+            <div class="auth-toggle" id="auth-toggle-login">
+                Don't have an account? <a href="#" id="switch-to-register">Create one</a>
+            </div>
+            <div class="auth-toggle hidden" id="auth-toggle-register">
+                Already have an account? <a href="#" id="switch-to-login">Sign in</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/toast.js"></script>
+    <script src="/js/auth.js"></script>
+</body>
+</html>
