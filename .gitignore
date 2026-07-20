@@ -1,6 +1,9 @@
 # Environment
 .env
-
+# Project documents
+NextHire_Concept_Note.pdf
+NextHire_Detailed_Project_Report.docx
+NextHire_Detailed_Project_Report.pdf
 # Python
 __pycache__/
 *.py[cod]
